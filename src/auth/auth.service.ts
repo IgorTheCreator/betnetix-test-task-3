@@ -2,8 +2,8 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { compareHash, generateHash } from './utils';
-import { IPayload } from './interfaces';
 import { RegisterDto } from './dto';
+import { IUser } from 'src/common/interfaces';
 
 @Injectable()
 export class AuthService {
@@ -12,7 +12,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateUser(username: string, password: string): Promise<IPayload> {
+  async validateUser(username: string, password: string): Promise<IUser> {
     const existingUser = await this.usersService.findUser({ username });
 
     // Проверяем существует ли пользователь с введеным username
@@ -28,7 +28,7 @@ export class AuthService {
     return { userId: existingUser.id, username: existingUser.username };
   }
 
-  async login(user: IPayload) {
+  async login(user: IUser) {
     const payload = { userId: user.userId, username: user.username };
     const access_token = await this.jwtService.signAsync(payload);
     return { access_token };
