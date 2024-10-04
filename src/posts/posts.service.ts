@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePostDto, AllPostsQueryDto } from './dto';
 import { IUser } from 'src/common/interfaces';
@@ -56,6 +56,10 @@ export class PostsService {
   }
 
   async deletePost(postId: number, user: IUser) {
+    const existingPost = await this.findPostById(postId);
+    if (!existingPost) {
+      throw new NotFoundException('Post does not exist');
+    }
     await this.prismaService.post.delete({
       where: {
         id: postId,
