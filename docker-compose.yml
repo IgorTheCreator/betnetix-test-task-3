@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: nestjs-app-postgres
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=betnetix-test-task-3
+    ports: -5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql2/data
+
+  app:
+    container_name: nestjs-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports: -'3000:3000'
+    depends_on:
+      - postgres
+    environment:
+      - DATABASE_URL=postgresql://postgres:12345@localhost:5432/betnetix-test-task-3?schema=public
+      - SECRET_KEY=SUPERSECRETKEY
+    volumes: -.:/usr/src/app
