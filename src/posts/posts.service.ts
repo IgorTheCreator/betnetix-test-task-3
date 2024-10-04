@@ -69,6 +69,10 @@ export class PostsService {
   }
 
   async countLikes(postId: number) {
+    const existingPost = await this.findPostById(postId);
+    if (!existingPost) {
+      throw new NotFoundException('Post does not exist');
+    }
     const {
       _count: { likes },
     } = await this.prismaService.post.findFirst({
