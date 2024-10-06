@@ -15,5 +15,5 @@ REST API с использованием Node.js, NestJS, Prisma ORM и TypeScri
 ## Как запустить приложение
 
 ```
-docker compose up
+docker-compose up --build
 ```
